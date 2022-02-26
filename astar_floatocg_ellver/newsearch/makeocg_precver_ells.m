@@ -1,0 +1,21 @@
+function ocg = makeocg_precver_ells(obstacles, discprec, lims, maxrads, M)
+% obstacles = obst;
+gridx = lims(1,1)+discprec:discprec:lims(1,2);
+gridy = lims(2,1)+discprec:discprec:lims(2,2);
+[agx, agy] = meshgrid(gridx,gridy);
+vecgrid=[agx(:),agy(:)];
+steps=[-1,-1,1,1;-1,1,1,-1]*0.5*discprec;
+[bbxvals,bbxadds]=meshgrid(vecgrid(:,1),steps(1,:));
+bbxs=bbxvals+bbxadds-discprec*0.5;
+[bbyvals,bbyadds]=meshgrid(vecgrid(:,2),steps(2,:));
+bbys=bbyvals+bbyadds-discprec*0.5;
+locn=size(bbxs,2);
+obstvec=zeros(1,locn);
+for ii=1:locn
+    bb=[bbxs(:,ii),bbys(:,ii)]';
+%     obstvec(ii)=bbcheck_vas(bb,obstacles,rad);
+    obstvec(ii)=bbcheck_ell_as(bb,obstacles,maxrads,M);
+end
+ocg=zeros(size(agx'));
+ocg(logical(obstvec))=1;
+ocg=ocg';
